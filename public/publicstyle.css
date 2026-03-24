@@ -1,0 +1,115 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* FONTS */
+body {
+  font-family: 'Inter', sans-serif;
+  background: #020617;
+  color: #e2e8f0;
+}
+
+/* IMPORT FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap');
+
+/* CONTAINER */
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 24px;
+}
+
+/* TITLE */
+.title {
+  font-family: 'Cinzel', serif;
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* SUBTITLE */
+.subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 40px;
+}
+
+/* BUTTON */
+.btn {
+  display: inline-block;
+  background: #facc15;
+  color: #020617;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+}
+
+.btn:hover {
+  background: #eab308;
+  transform: translateY(-2px);
+}
+
+/* CARD */
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* CHAT */
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+/* MESSAGES */
+.message {
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+
+.npc {
+  background: #1e293b;
+  border-left: 3px solid #facc15;
+}
+
+.player {
+  background: #334155;
+  margin-left: auto;
+}
+
+/* INPUT */
+.input-area {
+  display: flex;
+  gap: 10px;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+}
+
+.input-area button {
+  cursor: pointer;
+}
