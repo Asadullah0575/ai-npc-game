@@ -1,19 +1,35 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+// ✅ AI CONFIG (keep this)
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  // Point at OpenRouter’s base URL
   baseURL: "https://openrouter.ai/api/v1",
+});
+
+// ✅ ROUTE (example)
+app.post("/chat", async (req, res) => {
+  const { message } = req.body;
+
+  const completion = await openai.chat.completions.create({
+    model: "openai/gpt-3.5-turbo",
+    messages: [{ role: "user", content: message }],
+  });
+
+  res.json({ reply: completion.choices[0].message.content });
+});
+
+// ✅ PORT (add this for Render)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 /* Character system prompts */
