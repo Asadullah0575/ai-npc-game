@@ -11,7 +11,7 @@ app.use(express.static("public"));
 // ✅ AI CONFIG
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // your OpenRouter key
-  baseURL: "https://openrouter.ai/api/v1",
+  baseURL: "https://your-render-url.onrender.com",
   defaultHeaders: {
     "HTTP-Referer": "http://localhost:3000", // or your live URL
     "X-Title": "AI NPC Game"
@@ -38,7 +38,7 @@ app.post("/chat", async (req, res) => {
     const { message, character } = req.body;
 
     const response = await openai.chat.completions.create({
-      model: "mistralai/mistral-7b-instruct",
+      model: model: "openchat/openchat-7b",
       messages: [
         { role: "system", content: getSystemPrompt(character) },
         { role: "user", content: message }
