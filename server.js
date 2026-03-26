@@ -8,31 +8,13 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-// ✅ AI CONFIG (keep this)
+// ✅ AI CONFIG
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
 });
 
-// ✅ ROUTE (example)
-app.post("/chat", async (req, res) => {
-  const { message } = req.body;
-
-  const completion = await openai.chat.completions.create({
-    model: "openai/gpt-3.5-turbo",
-    messages: [{ role: "user", content: message }],
-  });
-
-  res.json({ reply: completion.choices[0].message.content });
-});
-
-// ✅ PORT (add this for Render)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-/* Character system prompts */
+// ✅ Character system prompts
 function getSystemPrompt(character) {
   switch (character) {
     case "guard":
@@ -46,12 +28,13 @@ function getSystemPrompt(character) {
   }
 }
 
+// ✅ SINGLE chat route (clean)
 app.post("/chat", async (req, res) => {
   try {
     const { message, character } = req.body;
 
     const response = await openai.chat.completions.create({
-      model: "mistralai/mistral-7b-instruct", // free model on OpenRouter
+      model: "mistralai/mistral-7b-instruct",
       messages: [
         { role: "system", content: getSystemPrompt(character) },
         { role: "user", content: message }
@@ -59,19 +42,25 @@ app.post("/chat", async (req, res) => {
       max_tokens: 150,
     });
 
-    return res.json({
+    res.json({
       reply: response.choices[0].message.content
     });
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
+    console.error("ERROR:", err);
+    res.status(500).json({
       error: "AI request failed",
       details: err.message
     });
   }
 });
 
+// ✅ Root route (helps Render detect server)
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
+// ✅ PORT (ONLY ONCE)
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
