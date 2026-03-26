@@ -51,7 +51,7 @@ app.post("/chat", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("ERROR:", err);
+  console.error("FULL ERROR:", err.response?.data || err.message);
     res.status(500).json({
       error: "AI request failed",
       details: err.message
