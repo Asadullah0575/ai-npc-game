@@ -2,10 +2,11 @@ async function sendMessage() {
   const input = document.getElementById("userInput");
   const chatBox = document.getElementById("chatBox");
 
+  if (!input.value.trim()) return; // prevent empty messages
+
   const userMsg = document.createElement("div");
   userMsg.className = "message player";
   userMsg.textContent = input.value;
-
   chatBox.appendChild(userMsg);
 
   const message = input.value;
@@ -18,7 +19,7 @@ async function sendMessage() {
   chatBox.appendChild(loading);
 
   try {
-    const res = await fetch("YOUR_API_URL_HERE", {
+    const res = await fetch("/chat", {   // ✅ FIXED HERE
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -29,15 +30,14 @@ async function sendMessage() {
     const data = await res.json();
 
     if (!res.ok) {
-      loading.textContent = data.details || "Error from server";
+      loading.textContent = data.error || "Error from server";
       return;
     }
 
-    // Replace loading with actual reply
     loading.textContent = data.reply;
 
   } catch (error) {
     loading.textContent = "Network error";
-    console.error(error);
+    console.error("Fetch error:", error);
   }
 }
