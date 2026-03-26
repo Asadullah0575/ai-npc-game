@@ -10,8 +10,12 @@ app.use(express.static("public"));
 
 // ✅ AI CONFIG
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY, // your OpenRouter key
   baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost:3000", // or your live URL
+    "X-Title": "AI NPC Game"
+  }
 });
 
 // ✅ Character system prompts
