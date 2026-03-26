@@ -10,10 +10,10 @@ app.use(express.static("public"));
 
 // ✅ AI CONFIG
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // your OpenRouter key
-  baseURL: "https://your-render-url.onrender.com",
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {
-    "HTTP-Referer": "http://localhost:3000", // or your live URL
+    "HTTP-Referer": "https://your-app-name.onrender.com",
     "X-Title": "AI NPC Game"
   }
 });
