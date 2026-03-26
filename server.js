@@ -50,14 +50,15 @@ app.post("/chat", async (req, res) => {
       reply: response.choices[0].message.content
     });
 
-  } catch (err) {
-  console.error("FULL ERROR:", err.response?.data || err.message);
-    res.status(500).json({
-      error: "AI request failed",
-      details: err.message
-    });
-  }
-});
+  catch (err) {
+  console.error("FULL ERROR:", err);
+
+  return res.status(500).json({
+    error: "AI request failed",
+    details: err.message,
+    stack: err.stack
+  });
+}
 
 // ✅ Root route (helps Render detect server)
 app.get("/", (req, res) => {
