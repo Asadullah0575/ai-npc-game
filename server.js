@@ -38,7 +38,7 @@ app.post("/chat", async (req, res) => {
     const { message, character } = req.body;
 
     const response = await openai.chat.completions.create({
-      model: model: "openchat/openchat-7b",
+      model: "openchat/openchat-7b",
       messages: [
         { role: "system", content: getSystemPrompt(character) },
         { role: "user", content: message }
