@@ -9,13 +9,12 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // ✅ AI CONFIG
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-  defaultHeaders: {
-    "HTTP-Referer": "https://your-app-name.onrender.com",
-    "X-Title": "AI NPC Game"
-  }
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-pro"
 });
 
 // ✅ Character system prompts
@@ -37,14 +36,16 @@ app.post("/chat", async (req, res) => {
   try {
     const { message, character } = req.body;
 
-    const response = await openai.chat.completions.create({
-      model: "openchat/openchat-7b",
-      messages: [
-        { role: "system", content: getSystemPrompt(character) },
-        { role: "user", content: message }
-      ],
-      max_tokens: 150,
-    });
+    const prompt = `
+${getSystemPrompt(character)}
+
+User: ${message}
+`;
+
+const result = await model.generateContent(prompt);
+const response = await result.response;
+
+const text = response.text();
 
     res.json({
       reply: response.choices[0].message.content
