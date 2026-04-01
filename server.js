@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -8,47 +8,55 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-// ✅ AI CONFIG
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
+// ✅ Gemini AI Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-pro"
+  model: "gemini-pro",
+  generationConfig: {
+    maxOutputTokens: 150,
+  },
 });
 
 // ✅ Character system prompts
 function getSystemPrompt(character) {
   switch (character) {
     case "guard":
-      return "You are a strict medieval guard. You are skeptical and short in responses.";
+      return "You are a strict medieval guard. You are skeptical and give short responses.";
     case "thief":
-      return "You are a witty thief. Speak playfully.";
+      return "You are a witty thief. Speak playfully and cleverly.";
     case "king":
-      return "You are a proud king. Use authoritative language.";
+      return "You are a proud king. Use authoritative and regal language.";
     default:
       return "You are a helpful character.";
   }
 }
 
-// ✅ SINGLE chat route (clean)
+// ✅ Chat route
 app.post("/chat", async (req, res) => {
   try {
     const { message, character } = req.body;
 
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
+    // Build prompt
     const prompt = `
 ${getSystemPrompt(character)}
 
 User: ${message}
 `;
 
-const result = await model.generateContent(prompt);
-const response = await result.response;
+    // Call Gemini
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
 
-const text = response.text();
+    const text = response.text();
 
+    // Send response
     res.json({
-      reply: response.choices[0].message.content
+      reply: text
     });
 
   } catch (err) {
@@ -56,18 +64,17 @@ const text = response.text();
 
     res.status(500).json({
       error: "AI request failed",
-      details: err.message,
-      stack: err.stack
+      details: err.message
     });
   }
 });
 
-// ✅ Root route (helps Render detect server)
+// ✅ Root route (Render needs this)
 app.get("/", (req, res) => {
-  res.send("Server is running");
+  res.send("Server is running 🚀");
 });
 
-// ✅ PORT (ONLY ONCE)
+// ✅ Start server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
